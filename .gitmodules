@@ -1,0 +1,15 @@
+[submodule "Linux"]
+	path = Linux
+	url = https://github.com/haslaboratory/Hitchhike-Linux.git
+[submodule "FIO"]
+	path = FIO
+	url = https://github.com/haslaboratory/Hitchhike-FIO.git
+[submodule "Leanstore"]
+	path = Leanstore
+	url = https://github.com/haslaboratory/Hitchhike-Leanstore.git
+[submodule "Blaze"]
+	path = Blaze
+	url = https://github.com/haslaboratory/Hitchhike-Blaze.git
+[submodule "spdk"]
+	path = spdk
+	url = https://github.com/spdk/spdk.git
