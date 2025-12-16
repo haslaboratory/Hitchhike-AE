@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+TEST_FILE=$1
+# setup FIO test parameters
+block_size=4K
+duration=10
+iodepth=("1" "4" "8" "16" "32" "64" "128" "256" "512" "1024")
+batch=32
+
+# FIO test execution (batch=32)
+    for depth in "${iodepth[@]}"; do
+          run_folder="libaio"
+          mkdir -p "$run_folder"
+          log_file="$run_folder/fio_libaio_D${depth}.log"
+          sudo fio --name=test --group_reporting=1 --filename=$TEST_FILE --ioengine=libaio --rw=randread --iodepth=$depth \
+          --bs=$block_size --norandommap=1 --ramp_time=0 --numjobs=1 --thread --direct=1 --iodepth_batch_submit=$batch \
+          --iodepth_batch_complete_max=$batch --iodepth_batch_complete_min=1 --time_based --runtime=$duration \
+            > $log_file
+    done

@@ -1,0 +1,6 @@
+linux-*
+*.log
+*.out
+*.pdf
+*.png
+*.csv

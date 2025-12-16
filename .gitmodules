@@ -13,3 +13,6 @@
 [submodule "spdk"]
 	path = spdk
 	url = https://github.com/spdk/spdk.git
+[submodule "liburing"]
+	path = liburing
+	url = https://github.com/haslaboratory/Hitchhike-liburing.git
