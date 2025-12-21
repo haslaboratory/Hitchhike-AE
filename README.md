@@ -35,7 +35,7 @@ This project consists of five major components:
 
 ---
 
-## 3. Getting Started
+## 3. Kernel Configuration
 **⚠️Note: If you are using our server, you can skip this step, as the Linux 6.5-hitchhike kernel has already been installed on it.**
 
 ### Step 1: Clone the Repository
@@ -151,7 +151,7 @@ sudo ./run.sh
 
 ## 5. Evaluation: LeanStore (Figure 14)
 > ⚠️ **Warning**: Only one SSD is required for the Leanstore test. We recommend using a PCIe 5.0 SSD.
-Compile and run the LeanStore benchmark (YCSB).
+Compile and run the LeanStore benchmark (YCSB). If compilation errors occur, the issue may lie with the g++ compiler version. You can switch to G++ 11.
 
 ```bash
 cd Hitchhike-AE/scripts
@@ -197,6 +197,8 @@ unzip -j twitter.zip -d /path/to/dataset/
 *   **friendster** (13GB): [Link](https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/friendster.zip)
 
 ### 6.3 Build and Run
+> ⚠️ **Warning**: Due to certain unknown device firmware issues, Blaze may encounter problems when running on the H5300. Please execute it on the PM1743 (SSD1, PCIe5.0) instead.
+
 ```bash
 cd Hitchhike-AE/scripts
 ./step4_build_and_install_blaze.sh
