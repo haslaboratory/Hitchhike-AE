@@ -1,5 +1,5 @@
 #!/bin/bash
-# /dev/nvme3n1 H5300 /dev/nvme0n1 PM9A3; /dev/nvme4n1 PM1743
+# /dev/nvme3n1 H5300 /dev/nvme5n1 PM1743  /dev/nvme6n1 PM9A3;
 
 TEST_FILES="/mnt/SSD0/testfile /mnt/SSD1/testfile /mnt/SSD2/testfile"
 

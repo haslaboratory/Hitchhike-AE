@@ -60,16 +60,16 @@ def build_command(args, data_format):
 
     return cmd
 
-def get_read_bytes_from_iostat(filename):
-    with open(filename) as f:
-        lines = f.readlines()
-        for line in lines:
-            words = line.split()
-            if not words: continue
-            # zhengxd: device name
-            if words[0] == 'nvme3n1':
-                # read is 2
-                return float(words[2])
+# def get_read_bytes_from_iostat(filename):
+#     with open(filename) as f:
+#         lines = f.readlines()
+#         for line in lines:
+#             words = line.split()
+#             if not words: continue
+#             # zhengxd: device name
+#             if words[0] == 'nvme3n1':
+#                 # read is 2
+#                 return float(words[2])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments for running FastGraph")
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     hitqueue = args.hitSize
     queuedepth = args.queueDepth
 
-    path = f'{result_dir}/{kernel}'
+    path = f'{kernel}/{dataset}'
     if (args.kernel.startswith('pagerank') or args.kernel.startswith('spmv')) and args.max_iterations > 0 and args.max_iterations < 1000:
         path += str(args.max_iterations)
 
@@ -148,19 +148,19 @@ if __name__ == "__main__":
         os.makedirs(path)
 
     if args.kernel.endswith('_sync'):
-        result_file = f'{path}/{dataset}_{data_format}_{threads}_{num_disks}.txt'
+        result_file = f'{path}/{result_dir}_{data_format}_{threads}_{num_disks}.txt'
     else:
         b = int(threads * bin_ratio)
         a = threads - b
-        # result_file = f'{path}/{dataset}_{data_format}_{threads}_{num_disks}__{bin_count}_{b}_{a}__{bin_size}.txt'
-        result_file = f'{path}/{dataset}_{data_format}_hitqueue{hitqueue}_ioqueue{queuedepth}_{threads}.txt'
+        # result_file = f'{path}/{result_dir}_{data_format}_{threads}_{num_disks}__{bin_count}_{b}_{a}__{bin_size}.txt'
+        result_file = f'{path}/{result_dir}_{data_format}_hitqueue{hitqueue}_ioqueue{queuedepth}_{threads}.txt'
 
     if not args.force and os.path.exists(result_file):
         print(f'{result_file} exists.')
         sys.exit()
 
     if not args.print_stdout:
-        cmd += f' >> {result_file}'
+        cmd += f' > {result_file}'
 
     if args.print_cmd:
         print(cmd)

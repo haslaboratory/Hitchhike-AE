@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-result_dir=result-aio
+result_dir=libaio
 # choose your disk mount point (dataset path)
 disks=$1
 
 threads=16
 declare -a depth=("256")
-declare -a hitqueue=("96")
+declare -a hitqueue=("0")
 hitchhike=0
 # Run workloads
 

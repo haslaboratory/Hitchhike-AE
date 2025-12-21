@@ -1,5 +1,5 @@
 #!/bin/bash
-# SSD0: /dev/nvme0n1 H5300  SSD1: /dev/nvme4n1  PM1743; SSD2: /dev/nvme2n1 PM9A3; 
+# SSD0: /dev/nvme3n1 H5300  SSD1: /dev/nvme5n1  PM1743; SSD2: /dev/nvme6n1 PM9A3; 
 
 
 #0. copy SPDK evaluation results
@@ -24,8 +24,8 @@ done
 
 #1. check the device
 
-TEST_DEVS="/dev/nvme3n1 /dev/nvme4n1 /dev/nvme0n1"
-TEST_DEVS_CMD="/dev/ng3n1 /dev/ng4n1 /dev/ng0n1"
+TEST_DEVS="/dev/nvme3n1 /dev/nvme5n1 /dev/nvme6n1"
+TEST_DEVS_CMD="/dev/ng3n1 /dev/ng5n1 /dev/ng6n1"
 
 for dev in ${TEST_DEVS}; do
   # 1. block device?

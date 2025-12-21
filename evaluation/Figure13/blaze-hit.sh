@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-result_dir=result-hit
+result_dir=hitchhike
 disks=$1
 threads=16
-declare -a depth=("8")
+declare -a depth=("16")
 declare -a hitqueue=("32" "96" "125")
+# declare -a hitqueue=("32")
 hitchhike=1
 # Run workloads
 
