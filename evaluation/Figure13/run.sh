@@ -22,7 +22,6 @@ for i in ${DATASET_DIR}; do
 done
 echo "Blaze tests completed."
 
-  
 #3. process the results
 echo "Processing cpu results..."
 

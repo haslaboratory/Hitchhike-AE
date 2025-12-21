@@ -7,19 +7,19 @@ INPUT_DIR = './result'
 
 
 LEGEND_LABELS = [
-    'libaio', 
     'Hit-32', 
     'Hit-96', 
-    'Hit-128'
+    'Hit-128',
+    'libaio'
 ]
-COLORS = ['#e3e4e6','#f6dc8d', '#fabf2c', '#ff643c']
+COLORS = ['#f6dc8d', '#fabf2c', '#ff643c','#e3e4e6']
 Y_LABEL = 'Time (seconds)'
 
 # ===========================================
 files = [f for f in os.listdir(INPUT_DIR) if f.endswith('_results.txt')]
 
 if not files:
-    print(f"在 {INPUT_DIR} no _results.txt。")
+    print(f"{INPUT_DIR} no _results.txt.")
     exit()
 
 for filename in files:
@@ -30,7 +30,8 @@ for filename in files:
 
     try:
 
-        df = pd.read_csv(filepath, delim_whitespace=True)
+        # df = pd.read_csv(filepath, delim_whitespace=True)
+        df = pd.read_csv(filepath, sep=r'\s+')
    
         if df.empty:
             print(f" skip: {filename}")
