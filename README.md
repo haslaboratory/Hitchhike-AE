@@ -10,13 +10,7 @@ This repository contains the source code, scripts, and instructions to reproduce
 
 *   **Storage**: NVMe SSDs (Evaluation includes PCIe 4.0, and 5.0).
 *   **OS**: Ubuntu 22.04 LTS.
-*   **CPU**: Evaluation environment uses 32 physical cores.
-
-> ⚠️ **Note**: You need to adjust disk paths in the scripts. NVMe device paths (e.g., /dev/nvme0n1) may change after a server reboot. Before running any tests, please use nvme list to verify the target device by matching the Serial Number (SN) and Model. The information about the SSD devices used in this paper is as follows:
-
-SSD0 (Dapustor H5300): HS5U00A23800DTJL (Model: DAPUSTOR DPHV5104T0TA03T2000)  
-SSD1 (Samsung PM1743): S7BUNE0WA01304 (Model: MZWLO3T8HCLS-01AGG)  
-SSD2 (Samsung PM9A3): S63SNC0T837816 (Model: SAMSUNG MZQL21T9HCJR-00B7C)  
+*   **CPU**: Evaluation environment uses 32 physical cores. 
 
 
 ### Access for Reviewers
@@ -80,7 +74,25 @@ sudo reboot
 
 ---
 
-## 4. Evaluation: FIO (Figures 8-11)
+
+## 4. Device Information Configuration
+> ⚠️ **Note**: You need to adjust disk paths in the script (step2.2_update_device_ids.py). We use three SSDs by default. Among them, the first one delivers the highest throughput and is used for most of the tests. If three drives are not available, you need to manually configure the device information when running the tests for Figure 9a, 11a, and 13.
+
+The information about the SSD devices used in this paper is as follows:   
+SSD0 (Dapustor H5300 PCIe 5.0): nvme-DAPUSTOR_DPHV5104T0TA03T2000_HS5U00A23800DTJL   
+SSD1 (Samsung PM1743 PCIe5.0 ): nvme-MZWLO3T8HCLS-01AGG_S7BUNE0WA01304  
+SSD2 (Samsung PM9A3 PCIe 4.0): nvme-SAMSUNG_MZQL21T9HCJR-00B7C_S63SNC0T837816 
+```bash
+# You can use the following commands to view the specific device ID information. 
+ls /dev/disk/by-id/ | grep nvme
+
+# Edit this script to define your target disk,
+python3 step2.2_update_device_ids.py
+```
+
+
+
+## 5. Evaluation: FIO (Figures 8-11)
 
 This section reproduces the microbenchmark results.
 > ⚠️ **Warning**: In the FIO tests, three NVMe drives were used for some of the test cases. In the tests presented in our paper, SSD0 is the Dapustor H5300 PCIe 5.0; SSD1 is the Samsung PM1743 PCIe 5.0; and SSD2 is the Samsung PM9A3 PCIe 4.0.
@@ -88,85 +100,70 @@ While the use of the exact SSD models listed above is not mandatory, it is recom
 
 
 
-### 4.1 Build FIO & SPDK
+### 5.1 Build FIO & SPDK
 ```bash
 cd Hitchhike-AE/scripts
 ./step2_build_and_install_fio.sh
 ./step2.1_build_and_install_spdk.sh
 ```
+
 > ⚠️ **Warning**: This will format the disk and erase all data on the target NVMe drive.
 
 ```bash
-# Edit this script to define your target disk (e.g., /dev/nvme0n1)
+# ⚠️ If three drives are not available, you need to manually configure the device information. 
 ./step2.2_FIO_raw_disk_setup.sh
 ```
 
-### 4.2 Configuration (Crucial)
-Before running any `run.sh` scripts, you **must manually configure** the target device paths. 
-Open the script (e.g., `vim run.sh`) and search for `TEST_DEVS`, `TEST_DEVS_CMD`, or `TEST_FILES`.
-
-**Example Configuration:**
-```bash
-TEST_DEVS="/dev/nvme0n1"        # For raw disk tests
-TEST_DEVS_CMD="/dev/ng0n1"      # For Passthru tests (ensure it is the char device /dev/ngXnY)
-TEST_FILES="/mnt/SSD0/testfile" # For Filesystem tests
-```
-
-### 4.3 Part A: Run SPDK Tests
+### 5.2 Part A: Run SPDK Tests
 These scripts bind devices to the SPDK driver. Since SPDK requires exclusive access to the device, we need to test SPDK first. The data from this part will be used together with the io_uring/libaio data to generate test images later.
 ```bash
 cd ../evaluation/spdk
-# Edit this script to define your target disk (e.g., /dev/nvme0n1)
 ./run_SSD0.sh 
-# Three SSDs are used by default. You may skip this step if no additional SSD devices are available. 
+# ⚠️Three SSDs are used by default. You may skip this step if no additional SSD devices are available. 
 ./run_SSD1.sh 
 ./run_SSD2.sh 
 ```
 
-### 4.4 Part B: Run Standard FIO (Raw Disk)
+### 5.3 Part B: Run Standard FIO (Raw Disk)
 **Reproduces Figures 8, 9, 10 (a-d).**
 
 ```bash
 # You can enter the folders with the corresponding numbers in sequence,  and navigate to the directory figure<N>/<N><x> (e.g., figure8/8a) to run the specific test..
 cd ../figure<N>/<N><x>
-# ⚠️Edit this script to define your target disk (e.g., /dev/nvme0n1)
 sudo ./run.sh
 ```
 
-### 4.5 Part C: Run Standard FIO (Filesystem)
+### 5.4 Part C: Run Standard FIO (Filesystem)
 **Reproduces Figure 11 (a-d).**
-> ⚠️ **Warning**: This script is used to initialize the file system and mount directories. Please note to modify the corresponding file directories.
 ```bash
 cd Hitchhike-AE/scripts
-# Edit this script to define your target disk (e.g., /dev/nvme0n1) and file directories
+# ⚠️ If three drives are not available, you need to manually configure the device information. 
 sudo ./step2.3_FIO_filesystem_setup.sh
 ```
 ```bash
 cd ../evaluation/figure11/11<x>
-# Edit this script to define your target file (e.g., /mnt/SSD0/testfile)
 sudo ./run.sh
 ```
 
 ---
 
-## 5. Evaluation: LeanStore (Figure 14)
+## 6. Evaluation: LeanStore (Figure 14)
 > ⚠️ **Warning**: Only one SSD is required for the Leanstore test. We recommend using a PCIe 5.0 SSD.
 Compile and run the LeanStore benchmark (YCSB). If compilation errors occur, the issue may lie with the g++ compiler version. You can switch to G++ 11.
 
 ```bash
 cd Hitchhike-AE/scripts
 ./step3_build_and_install_leanstore.sh
-# Edit this script to define your target disk (e.g., /dev/nvme0n1)
 cd ../evaluation/figure14
-# 
+# The tests are performed on the first SSD by default, namely SSD0.
 ./run_ycsb.sh
 ```
 
 ---
 
-## 6. Evaluation: Blaze (Figure 13)
+## 7. Evaluation: Blaze (Figure 13)
 
-### 6.1 Install Dependencies (GCC-7)
+### 7.1 Install Dependencies (GCC-7)
 Blaze requires `g++-7`. Please install it and switch the default compiler:
 
 ```bash
@@ -178,32 +175,25 @@ sudo update-alternatives --config g++
 g++ --version
 ```
 
-### 6.2 Download Datasets
-> ⚠️ **Warning**: Only one SSD is required for the Blaze test. We recommend using a PCIe 5.0 SSD, and the dataset needs to be downloaded to the mount directory of this SSD.
+### 7.2 Build and Download Datasets
+
+```bash
+cd Hitchhike-AE/scripts
+./step4_build_and_install_blaze.sh
+```
+> ⚠️ **Warning**: Only one SSD is required for the Blaze test. Please execute it on the PM1743 (SSD1, PCIe5.0) .
 
 Download and unzip the required graph datasets.
 *Note: Some datasets are large (e.g., rmat30 is 102GB). For a quick verification, you may start with smaller datasets like `sk2005` or `twitter`.*
 
 ```bash
-# Example: Download and unzip Twitter dataset
-wget https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/twitter.zip
-unzip -j twitter.zip -d /path/to/dataset/
+# The data is downloaded to the second SSD by default, namely SSD1 (TARGET_DIR="mnt/SSD1/").
+sudo ./step4.1_download_dataset.sh
 ```
-*   **rmat27** (13GB): [Link](https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/rmat27.zip)
-*   **rmat30** (102GB): [Link](https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/rmat30.zip)
-*   **uran27** (16GB): [Link](https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/uran27.zip)
-*   **twitter** (8.5GB): [Link](https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/twitter.zip)
-*   **sk2005** (2.3GB): [Link](https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/sk2005.zip)
-*   **friendster** (13GB): [Link](https://storage.googleapis.com/nvsl-aepdata/graphdata/sc22/friendster.zip)
 
-### 6.3 Build and Run
-> ⚠️ **Warning**: Due to certain unknown device firmware issues, Blaze may encounter problems when running on the H5300. Please execute it on the PM1743 (SSD1, PCIe5.0) instead.
-
+### 7.3 Run
 ```bash
-cd Hitchhike-AE/scripts
-./step4_build_and_install_blaze.sh
-
-# Update dataset paths in run.sh before executing
+cd ../evaluation/figure13
 ./run.sh
 ```
 

@@ -15,7 +15,15 @@ SPDK_PATH="$ARTIFACT_DIR/spdk"
 mkdir -p "SSD2"
 
 #1. the third nvme device (/dev/nvme*), we recommend the Samsung PM9A3 (PCIe 4.0 900K IOPS).
-TEST_DEVS=/dev/nvme0n1
+# SSD2 PM9A3
+TARGET_DISK_ID2="nvme-SAMSUNG_MZQL21T9HCJR-00B7C_S63SNC0T837816"
+TEST_DEVS=$(readlink -f /dev/disk/by-id/${TARGET_DISK_ID2})
+if [ -z "$TEST_DEVS" ]; then
+    echo "Error: can't find device $TARGET_DISK_ID2"
+    exit 1
+fi
+echo "Block Devices (TEST_DEVS):"
+echo "$TEST_DEVS"
 
 # get device ID and PCI address
 DEV_ID=`basename $TEST_DEVS`
@@ -32,7 +40,7 @@ for threads in 1
 do
     sudo env LD_PRELOAD=$ARTIFACT_DIR/spdk/build/fio/spdk_nvme $ARTIFACT_DIR/FIO/fio \
     --name=test --ioengine=spdk --group_reporting=1 --direct=1 --time_based=1 --ramp_time=10 --runtime=30 --iodepth=512 \
-    --rw=randread --numjobs=$threads --thread=1 --bs=4k --filename="trtype=PCIe traddr=$PCI_ADDR ns=1" >> SSD2/spdk.log
+    --rw=randread --numjobs=$threads --thread=1 --bs=4k --filename="trtype=PCIe traddr=$PCI_ADDR ns=1" > SSD2/spdk.log
 done
 
 sudo ./FIO_spdk_reset.sh

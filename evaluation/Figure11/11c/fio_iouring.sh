@@ -22,7 +22,7 @@ for ((n=0; n<TIMES; n++)); do
           --iodepth=$iodepth --bs=4k --norandommap=1 --ramp_time=0 --numjobs=$threads --thread --direct=1 \
           --iodepth_batch_submit=$b --iodepth_batch_complete_max=$b \
           --iodepth_batch_complete_min=1 --time_based --runtime=$duration \
-            >> $log_file
+            > $log_file
         done
     done
 done
@@ -39,7 +39,7 @@ for ((n=0; n<TIMES; n++)); do
           --iodepth=$iodepth --bs=4k --norandommap=1 --ramp_time=0 --numjobs=$threads --thread --direct=1 \
           --iodepth_batch_submit=$b --iodepth_batch_complete_max=$b \
           --iodepth_batch_complete_min=1 --time_based --runtime=$duration --fixedbufs \
-            >> $log_file
+            > $log_file
         done
     done
 done
@@ -58,7 +58,7 @@ for ((n=0; n<TIMES; n++)); do
           --iodepth=$iodepth --bs=4k --norandommap=1 --ramp_time=10 --numjobs=$threads --thread --direct=1 \
           --iodepth_batch_submit=$b --iodepth_batch_complete_max=$b \
           --iodepth_batch_complete_min=1 --time_based --runtime=$duration --fixedbufs --hipri \
-            >> $log_file
+            > $log_file
         done
     done
 done

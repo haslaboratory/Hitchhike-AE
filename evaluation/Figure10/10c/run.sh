@@ -6,6 +6,8 @@ cp -r "../../Figure8/8c/iouring" "../../Figure8/8c/iouring-cmd" "../../Figure8/8
 #2. process the results
 echo "Processing cpu results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder"
 
 for DIRECTORY in iouring iouring-cmd libaio spdk; do

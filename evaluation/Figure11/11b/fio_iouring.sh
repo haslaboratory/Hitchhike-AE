@@ -24,7 +24,7 @@ for ((n=0; n<TIMES; n++)); do
           sudo fio --name=test --group_reporting=1 --filename=$TEST_FILE --ioengine=io_uring --rw=randread --iodepth=$iodepth --bs=$block_size \
              --norandommap=1 --ramp_time=10 --numjobs=$thread --thread --direct=1 --iodepth_batch_submit=$b --iodepth_batch_complete_max=$b \
             --iodepth_batch_complete_min=1 --time_based --runtime=$duration \
-            >> $log_file
+            > $log_file
         done
       done
     done
@@ -44,7 +44,7 @@ for ((n=0; n<TIMES; n++)); do
           log_file="$run_folder/fio_file_iouring-fb_T${thread}.log"
           sudo fio --name=test --group_reporting=1 --filename=$TEST_FILE --ioengine=io_uring --rw=randread --iodepth=$iodepth --bs=$block_size --norandommap=1 \
             --numjobs=$thread --thread --direct=1 --iodepth_batch_submit=$b --iodepth_batch_complete_max=$b --iodepth_batch_complete_min=1 \
-            --fixedbufs --ramp_time=10 --time_based --runtime=$duration >> $log_file
+            --fixedbufs --ramp_time=10 --time_based --runtime=$duration > $log_file
         done
       done
     done

@@ -1,8 +1,14 @@
 #!/bin/bash
 
-# SSD0: /dev/nvme3n1 H5300 
-# change it according to your test device (H5300 PCIe 5.0 NVMe SSD is recommended)
-TEST_DEVS="/dev/nvme3n1"
+# SSD0 H5300 
+TARGET_DISK_ID0="nvme-DAPUSTOR_DPHV5104T0TA03T2000_HS5U00A23800DTJL"
+TEST_DEVS=$(readlink -f /dev/disk/by-id/${TARGET_DISK_ID0})
+if [ -z "$TEST_DEVS" ]; then
+    echo "Error: can't find device $TARGET_DISK_ID0"
+    exit 1
+fi
+echo "Block Devices (TEST_DEVS):"
+echo "$TEST_DEVS"
 
 #1. check the device
 for dev in ${TEST_DEVS}; do
@@ -42,6 +48,8 @@ echo "FIO tests completed."
 #3. process the results
 echo "Processing IOPS results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder"
 
 for DIRECTORY in libaio iouring; do

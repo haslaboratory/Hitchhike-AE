@@ -1,5 +1,4 @@
 #!/bin/bash
-# /dev/nvme3n1 H5300 /dev/nvme5n1 PM1743  /dev/nvme6n1 PM9A3;
 
 TEST_FILES="/mnt/SSD0/testfile /mnt/SSD1/testfile /mnt/SSD2/testfile"
 
@@ -17,6 +16,8 @@ done
 #2. process the results
 echo "Processing Bandwidth results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder" 
 
 for SSD in SSD0 SSD1 SSD2; do

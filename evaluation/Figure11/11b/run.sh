@@ -1,5 +1,4 @@
 #!/bin/bash
-# /dev/nvme3n1 H5300 /dev/nvme0n1 PM9A3; /dev/nvme4n1 PM1743
 
 TEST_FILES="/mnt/SSD0/testfile"
 
@@ -15,6 +14,8 @@ done
 #2. process the results
 echo "Processing Bandwidth results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder" 
 
 for DIRECTORY in libaio iouring iouring-fb iouring-iopoll-fb; do

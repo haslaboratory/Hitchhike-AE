@@ -6,6 +6,8 @@ cp -r "../11c/iouring" "../11c/iouring-fb" "../11c/libaio" "../11c/iouring-iopol
 #2. process the results
 echo "Processing cpu results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder"
 
 for DIRECTORY in iouring iouring-fb iouring-iopoll-fb libaio; do

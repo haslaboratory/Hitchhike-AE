@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # need to set the dataset path in blaze-aio.sh and blaze-hit.sh
-# DATASET_DIR="/mnt/SSD0/dataset"
 DATASET_DIR="/mnt/SSD1/mnt/nvme/sc22"
 
 #1. create result directories
@@ -33,7 +32,10 @@ RESULT_FOLDER="./result"
 TEMP_DIR="./tmp_columns" 
 FILE_PATTERN="*.txt"
 
+# Remove previous results and create a new result folder
+rm -rf "$RESULT_FOLDER"
 mkdir -p "$RESULT_FOLDER"
+rm -rf "$TEMP_DIR"
 mkdir -p "$TEMP_DIR"
 
 for DIR_L1 in "${L1_DIRS[@]}"; do

@@ -6,6 +6,8 @@ cp -r "../9c/iouring-iopoll-fb" "../9c/iouring-sqpoll-fb" "../9c/iouring-cmd-iop
 #2. process the results
 echo "Processing cpu results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder"
 
 for DIRECTORY in iouring-iopoll-fb iouring-sqpoll-fb iouring-cmd-iopoll-fb hitchhike-uring spdk; do

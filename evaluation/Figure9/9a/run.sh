@@ -23,9 +23,36 @@ done
 
 
 #1. check the device
+TARGET_IDS=(
+    "nvme-DAPUSTOR_DPHV5104T0TA03T2000_HS5U00A23800DTJL"
+    "nvme-MZWLO3T8HCLS-01AGG_S7BUNE0WA01304"
+    "nvme-SAMSUNG_MZQL21T9HCJR-00B7C_S63SNC0T837816"
+)
+TEST_DEVS=""
+TEST_DEVS_CMD=""
 
-TEST_DEVS="/dev/nvme3n1 /dev/nvme5n1 /dev/nvme6n1"
-TEST_DEVS_CMD="/dev/ng3n1 /dev/ng5n1 /dev/ng6n1"
+for id in "${TARGET_IDS[@]}"; do
+    real_dev=$(readlink -f "/dev/disk/by-id/$id")
+    if [ -z "$real_dev" ] || [ ! -e "$real_dev" ]; then
+        echo "Error: can't find device ID: $id"
+        exit 1
+    fi
+    ng_dev=${real_dev/nvme/ng}
+
+    if [ -z "$TEST_DEVS" ]; then
+        TEST_DEVS="$real_dev"
+        TEST_DEVS_CMD="$ng_dev"
+    else
+        TEST_DEVS="$TEST_DEVS $real_dev"
+        TEST_DEVS_CMD="$TEST_DEVS_CMD $ng_dev"
+    fi
+done
+
+echo "Block Devices (TEST_DEVS):"
+echo "$TEST_DEVS"
+echo ""
+echo "Char Devices (TEST_DEVS_CMD):"
+echo "$TEST_DEVS_CMD"
 
 for dev in ${TEST_DEVS}; do
   # 1. block device?
@@ -69,6 +96,8 @@ echo "FIO tests completed."
 #3. process the results
 echo "Processing Bandwidth results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder" 
 
 for SSD in SSD0 SSD1 SSD2; do

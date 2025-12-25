@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# SSD0 H5300 
+TARGET_DISK_ID0="nvme-DAPUSTOR_DPHV5104T0TA03T2000_HS5U00A23800DTJL"
+TEST_DEVS=$(readlink -f /dev/disk/by-id/${TARGET_DISK_ID0})
+if [ -z "$TEST_DEVS" ]; then
+    echo "Error: can't find device $TARGET_DISK_ID0"
+    exit 1
+fi
+echo "Block Devices (TEST_DEVS):"
+echo "$TEST_DEVS"
 
 # 1. run the experiments
 caches=("0.25" "0.5" "1" "2")
@@ -11,72 +20,72 @@ mkdir -p YCSB-A YCSB-B YCSB-C YCSB-D YCSB-E YCSB-F
     for thread in "${threads[@]}"; do
 
       # YCSB A
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=50 --ycsb_type=1  --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1 \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  --hitchhike >> YCSB-A/C${cache}-hitchhike.out
+      --worker_threads=$thread --pp_threads=$thread  --hitchhike > YCSB-A/C${cache}-hitchhike.out
 
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=50 --ycsb_type=1  --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1 \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  >> YCSB-A/C${cache}-iouring.out
+      --worker_threads=$thread --pp_threads=$thread  > YCSB-A/C${cache}-iouring.out
 
       # YCSB B
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=95 --ycsb_type=1  --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1 \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  --hitchhike >> YCSB-B/C${cache}-hitchhike.out
+      --worker_threads=$thread --pp_threads=$thread  --hitchhike > YCSB-B/C${cache}-hitchhike.out
 
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=95 --ycsb_type=1  --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1 \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  >> YCSB-B/C${cache}-iouring.out
+      --worker_threads=$thread --pp_threads=$thread  > YCSB-B/C${cache}-iouring.out
 
       # YCSB C
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=100 --ycsb_type=1 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1  \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  --hitchhike >> YCSB-C/C${cache}-hitchhike.out
+      --worker_threads=$thread --pp_threads=$thread  --hitchhike > YCSB-C/C${cache}-hitchhike.out
 
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=100 --ycsb_type=1 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1  \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  >> YCSB-C/C${cache}-iouring.out
+      --worker_threads=$thread --pp_threads=$thread  > YCSB-C/C${cache}-iouring.out
 
 
       # YCSB D
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=95 --ycsb_type=2 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1  \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  --hitchhike >> YCSB-D/C${cache}-hitchhike.out
+      --worker_threads=$thread --pp_threads=$thread  --hitchhike > YCSB-D/C${cache}-hitchhike.out
 
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=95 --ycsb_type=2 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1  \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  >> YCSB-D/C${cache}-iouring.out
+      --worker_threads=$thread --pp_threads=$thread  > YCSB-D/C${cache}-iouring.out
 
       # # YCSB E
-      # ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      # ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       # --target_gib=1 --ycsb_scan_ratio=95 --ycsb_type=3 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1  \
       # --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      # --worker_threads=$thread --pp_threads=$thread  --hitchhike >> YCSB-E/C${cache}-hitchhike.out
+      # --worker_threads=$thread --pp_threads=$thread  --hitchhike > YCSB-E/C${cache}-hitchhike.out
 
-      # ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      # ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       # --target_gib=1 --ycsb_scan_ratio=95 --ycsb_type=3 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1 \
       # --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      # --worker_threads=$thread --pp_threads=$thread  >> YCSB-E/C${cache}-iouring.out
+      # --worker_threads=$thread --pp_threads=$thread  > YCSB-E/C${cache}-iouring.out
 
 
       # YCSB F
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=50 --ycsb_type=4 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1 \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  --hitchhike >> YCSB-F/C${cache}-hitchhike.out
+      --worker_threads=$thread --pp_threads=$thread  --hitchhike > YCSB-F/C${cache}-hitchhike.out
 
-      ./../../Leanstore/build/frontend/ycsb --ssd_path="/dev/nvme3n1" --ioengine=io_uring --partition_bits=12 \
+      ./../../Leanstore/build/frontend/ycsb --ssd_path="$TEST_DEVS" --ioengine=io_uring --partition_bits=12 \
       --target_gib=1 --ycsb_read_ratio=50 --ycsb_type=4 --optimistic_parent_pointer=1 --xmerge=1 --contention_split=1 \
       --run_for_seconds=10 --dram_gib=$cache --worker_tasks=126 \
-      --worker_threads=$thread --pp_threads=$thread  >> YCSB-F/C${cache}-iouring.out
+      --worker_threads=$thread --pp_threads=$thread  > YCSB-F/C${cache}-iouring.out
 
     done
   done
@@ -87,6 +96,8 @@ mkdir -p YCSB-A YCSB-B YCSB-C YCSB-D YCSB-E YCSB-F
 #2. process the results
 echo "Processing cpu results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder"
 
 for DIRECTORY in YCSB-A YCSB-B YCSB-C YCSB-D YCSB-F; do

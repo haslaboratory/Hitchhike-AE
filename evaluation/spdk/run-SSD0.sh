@@ -19,7 +19,16 @@ mkdir -p "depth"
 
 #1. the first nvme device (/dev/nvme*)
 # Preferably, the drive should be the one with the best performance, and we recommend the Dapustor H5300 (Pcie 5.0 2800K IOPS).
-TEST_DEVS=/dev/nvme3n1
+# SSD0 H5300 
+TARGET_DISK_ID0="nvme-DAPUSTOR_DPHV5104T0TA03T2000_HS5U00A23800DTJL"
+TEST_DEVS=$(readlink -f /dev/disk/by-id/${TARGET_DISK_ID0})
+if [ -z "$TEST_DEVS" ]; then
+    echo "Error: can't find device $TARGET_DISK_ID0"
+    exit 1
+fi
+echo "Block Devices (TEST_DEVS):"
+echo "$TEST_DEVS"
+
 # get device ID and PCI address
 DEV_ID=`basename $TEST_DEVS`
 printf "$DEV_ID\n"

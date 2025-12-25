@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# SSD0: /dev/nvme3n1 H5300
-# change it according to your test device (H5300 PCIe 5.0 NVMe SSD is recommended)
-
 #0. copy SPDK evaluation results
 SRC="../../spdk/depth"
 DST="./spdk"
@@ -18,8 +15,20 @@ cp -r "$SRC"/. "$DST"/
 
 
 #1. check the device
-TEST_DEVS="/dev/nvme3n1"
-TEST_DEVS_CMD="/dev/ng3n1"
+# SSD0 H5300 
+TARGET_DISK_ID0="nvme-DAPUSTOR_DPHV5104T0TA03T2000_HS5U00A23800DTJL"
+TEST_DEVS=$(readlink -f /dev/disk/by-id/${TARGET_DISK_ID0})
+if [ -z "$TEST_DEVS" ]; then
+    echo "Error: can't find device $TARGET_DISK_ID0"
+    exit 1
+fi
+TEST_DEVS_CMD=${TEST_DEVS/nvme/ng}
+echo "Block Devices (TEST_DEVS):"
+echo "$TEST_DEVS"
+echo ""
+echo "Char Devices (TEST_DEVS_CMD):"
+echo "$TEST_DEVS_CMD"
+
 
 for dev in ${TEST_DEVS}; do
   # 1. block device?
@@ -58,6 +67,8 @@ echo "FIO tests completed."
 #3. process the results
 echo "Processing Bandwidth results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder"
 
 for DIRECTORY in libaio iouring-fb iouring-cmd-fb spdk; do

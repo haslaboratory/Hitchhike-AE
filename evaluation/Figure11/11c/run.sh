@@ -20,6 +20,8 @@ echo "FIO tests completed."
 #3. process the results
 echo "Processing Bandwidth results..."
 result_folder="result/"
+# Remove previous results and create a new result folder
+rm -rf "$result_folder"
 mkdir -p "$result_folder"
 
 for DIRECTORY in iouring iouring-iopoll-fb iouring-fb libaio; do

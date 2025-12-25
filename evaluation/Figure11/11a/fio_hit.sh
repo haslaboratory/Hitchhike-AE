@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# /dev/nvme2n1 X2900P; /dev/nvme3n1 PM9A3; /dev/nvme7n1 PM1743
 
 TEST_FILE=$1
 INDEX=$2
