@@ -1,6 +1,4 @@
 #!/bin/bash
-# SSD0: /dev/nvme3n1 H5300  SSD1: /dev/nvme5n1  PM1743; SSD2: /dev/nvme6n1 PM9A3; 
-
 
 #0. copy SPDK evaluation results
 SSDS=("SSD0" "SSD1" "SSD2")

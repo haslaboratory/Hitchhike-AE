@@ -1,5 +1,4 @@
 #!/bin/bash
-# /dev/nvme3n1 H5300
 
 #0. copy SPDK evaluation results
 SRC="../../spdk/threads"

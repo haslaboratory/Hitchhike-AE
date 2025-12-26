@@ -87,7 +87,7 @@ SSD2 (Samsung PM9A3 PCIe 4.0): nvme-SAMSUNG_MZQL21T9HCJR-00B7C_S63SNC0T837816
 ls /dev/disk/by-id/ | grep nvme
 
 # Edit this script to define your target disk,
-python3 step2.2_update_device_ids.py
+python3 step2_update_device_ids.py
 ```
 
 
@@ -103,15 +103,15 @@ While the use of the exact SSD models listed above is not mandatory, it is recom
 ### 5.1 Build FIO & SPDK
 ```bash
 cd Hitchhike-AE/scripts
-./step2_build_and_install_fio.sh
-./step2.1_build_and_install_spdk.sh
+./step3_build_and_install_fio.sh
+./step3.1_build_and_install_spdk.sh
 ```
 
 > ⚠️ **Warning**: This will format the disk and erase all data on the target NVMe drive.
 
 ```bash
 # ⚠️ If three drives are not available, you need to manually configure the device information. 
-./step2.2_FIO_raw_disk_setup.sh
+./step3.2_FIO_raw_disk_setup.sh
 ```
 
 ### 5.2 Part A: Run SPDK Tests
@@ -138,7 +138,7 @@ sudo ./run.sh
 ```bash
 cd Hitchhike-AE/scripts
 # ⚠️ If three drives are not available, you need to manually configure the device information. 
-sudo ./step2.3_FIO_filesystem_setup.sh
+sudo ./step3.3_FIO_filesystem_setup.sh
 ```
 ```bash
 cd ../evaluation/figure11/11<x>
@@ -153,10 +153,10 @@ Compile and run the LeanStore benchmark (YCSB). If compilation errors occur, the
 
 ```bash
 cd Hitchhike-AE/scripts
-./step3_build_and_install_leanstore.sh
+./step4_build_and_install_leanstore.sh
 cd ../evaluation/figure14
 # The tests are performed on the first SSD by default, namely SSD0.
-./run_ycsb.sh
+./run.sh
 ```
 
 ---
@@ -179,7 +179,7 @@ g++ --version
 
 ```bash
 cd Hitchhike-AE/scripts
-./step4_build_and_install_blaze.sh
+./step5_build_and_install_blaze.sh
 ```
 > ⚠️ **Warning**: Only one SSD is required for the Blaze test. Please execute it on the PM1743 (SSD1, PCIe5.0) .
 
@@ -188,7 +188,7 @@ Download and unzip the required graph datasets.
 
 ```bash
 # The data is downloaded to the second SSD by default, namely SSD1 (TARGET_DIR="mnt/SSD1/").
-sudo ./step4.1_download_dataset.sh
+sudo ./step5.1_download_dataset.sh
 ```
 
 ### 7.3 Run

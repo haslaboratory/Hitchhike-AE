@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# SSD0: /dev/nvme0n1 H5300
-# change it according to your test device (H5300 PCIe 5.0 NVMe SSD is recommended)
-
-
 #1. check the device
 TEST_FILES="/mnt/SSD0/testfile"
 

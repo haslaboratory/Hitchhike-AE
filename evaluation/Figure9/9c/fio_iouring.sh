@@ -1,5 +1,4 @@
 #!/bin/bash
-# /dev/nvme0n1 H5300  /dev/nvme3n1 X2900P; /dev/nvme5n1 PM9A3; /dev/nvme7n1 PM1743
 
 TEST_DEV=$1
 # setup FIO test parameters

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# SSD0 H5300 
 TARGET_DISK_ID0="nvme-DAPUSTOR_DPHV5104T0TA03T2000_HS5U00A23800DTJL"
 TEST_DEVS=$(readlink -f /dev/disk/by-id/${TARGET_DISK_ID0})
 if [ -z "$TEST_DEVS" ]; then
